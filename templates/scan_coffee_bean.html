@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Scan a Coffee Bean - Liberica Lens</title>
+    <link
+      rel="icon"
+      type="image/svg"
+      href="{{ url_for('static', filename='IMG/liberica_lens_icon.png') }}"
+    />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='CSS/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <header>
+      <!-- place navbar here -->
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <!-- Logo and website name -->
+          <a class="navbar-brand text-uppercase" href="/">
+            <img
+              src="{{ url_for('static', filename='IMG/liberica_lens_icon.png') }}"
+              alt="Logo"
+              width="30"
+              height="24"
+            />
+            Liberica Lens
+          </a>
+          <!-- Hamburger icon for mobile menu -->
+          <button
+            class="navbar-toggler navbar-dark"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar-menu"
+            aria-controls="navbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon navbar-light"></span>
+          </button>
+          <!-- Navbar menu items -->
+          <div class="collapse navbar-collapse" id="navbar-menu">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/records">Records</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/objectives">Objectives</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active text-uppercase" href="/scan"
+                  >Scan a Coffee Bean</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container mt-4">
+        <h1 class="text-center">Scan a Liberica Coffee Bean</h1>
+        <div class="container">
+          <p class="mt-1 text-center">
+            This feature allows the user to scan a coffee bean and get
+            information about it; extracting the morphological features of it.
+          </p>
+        </div>
+      </div>
+      <section class="capture mt-5">
+        <div
+          class="container-bean py-sm-1 d-flex flex-column align-items-center justify-content-center"
+        >
+          <h1>Upload Coffee Bean Image</h1>
+          <form method="POST" enctype="multipart/form-data">
+            <input
+              type="file"
+              name="file"
+              accept="image/*"
+              required
+              onchange="previewFile(this)"
+            /><br /><br />
+            <img
+              id="previewImage"
+              src="{{ url_for('static', filename='IMG/camera_bean_icon.png') }}"
+              alt="Image preview"
+              style="max-width: 300px"
+            />
+            <label for="class_label">Class Label(Farm):</label>
+            <select name="class_label" id="class_label" required>
+              <option value="Katy">Katy</option>
+              <option value="Mukring">Mukring</option>
+              <option value="Saludo">Saludo</option>
+              <option value="Tunying">Tunying</option></select
+            ><br /><br />
+            <input type="submit" value="Upload and Process" />
+          </form>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <!-- place footer here -->
+      <div class="footer text-center">
+        Computer Science Thesis of Batangas State University - TNEU Lipa
+      </div>
+      <div class="footer text-center">May 2024</div>
+    </footer>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="{{ url_for('static', filename='JS/scan_coffee_bean.js') }}"></script>
+
+    <script>
+      function previewFile(input) {
+        var file = input.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          document.getElementById("previewImage").src = reader.result;
+        };
+        if (file) {
+          reader.readAsDataURL(file);
+        } else {
+          document.getElementById("previewImage").src = "";
+        }
+      }
+    </script>
+  </body>
+</html>
