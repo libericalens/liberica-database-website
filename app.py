@@ -300,45 +300,57 @@ def objectives():
 @app.route('/records')
 def records():
     """Render the records page with pagination and sorting"""
-    # Get query parameters
-    page = max(1, int(request.args.get('page', 1)))
-    sort_by = request.args.get('sort_by', 'id')
-    sort_order = request.args.get('sort_order', 'asc')
-    class_label = request.args.get('class_label')
-    
-    # Base query
-    query = LibericaBeanMetadata.query
-    
-    # Apply class label filter if specified
-    if class_label:
-        query = query.filter(LibericaBeanMetadata.class_label == class_label)
-    
-    # Apply sorting
-    if hasattr(LibericaBeanMetadata, sort_by):
-        if sort_order == 'desc':
-            query = query.order_by(getattr(LibericaBeanMetadata, sort_by).desc())
-        else:
-            query = query.order_by(getattr(LibericaBeanMetadata, sort_by))
-    
-    # Get unique class labels for filter dropdown
-    class_labels = db.session.query(LibericaBeanMetadata.class_label).distinct().all()
-    class_labels = [label[0] for label in class_labels]
-    
-    # Pagination
-    total_count = query.count()
-    total_pages = math.ceil(total_count / PAGE_SIZE)
-    paginated_data = query.paginate(page=page, per_page=PAGE_SIZE, error_out=False)
-    
-    return render_template(
-        'records.html', 
-        data=paginated_data.items, 
-        pagination=paginated_data,
-        sort_by=sort_by, 
-        sort_order=sort_order, 
-        class_labels=class_labels, 
-        class_label=class_label
-    )
+    try:
+        # Get query parameters with defaults
+        page = max(1, int(request.args.get('page', 1)))
+        sort_by = request.args.get('sort_by', 'id')
+        sort_order = request.args.get('sort_order', 'asc')
+        class_label = request.args.get('class_label')
 
+        # Base query
+        query = LibericaBeanMetadata.query
+
+        # Apply class label filter if specified
+        if class_label:
+            query = query.filter(LibericaBeanMetadata.class_label == class_label)
+
+        # Apply sorting
+        if hasattr(LibericaBeanMetadata, sort_by):
+            if sort_order == 'desc':
+                query = query.order_by(getattr(LibericaBeanMetadata, sort_by).desc())
+            else:
+                query = query.order_by(getattr(LibericaBeanMetadata, sort_by))
+
+        # Get unique class labels for filter dropdown
+        class_labels = db.session.query(LibericaBeanMetadata.class_label).distinct().all()
+        class_labels = [label[0] for label in class_labels]
+
+        # Pagination
+        paginated_data = query.paginate(page=page, per_page=PAGE_SIZE, error_out=False)
+        
+        # Ensure we have valid pagination data
+        if not paginated_data.items:
+            return render_template('records.html', 
+                                 data=[], 
+                                 pagination=None,
+                                 sort_by=sort_by, 
+                                 sort_order=sort_order, 
+                                 class_labels=class_labels, 
+                                 class_label=class_label)
+
+        return render_template(
+            'records.html', 
+            data=paginated_data.items, 
+            pagination=paginated_data,
+            sort_by=sort_by, 
+            sort_order=sort_order, 
+            class_labels=class_labels, 
+            class_label=class_label,
+            page=page  # Explicitly pass page variable
+        )
+    except Exception as e:
+        app.logger.error(f"Error in records route: {str(e)}")
+        return render_template('error.html', error="An error occurred while loading records"), 500
 
 @app.route('/scan', methods=['GET', 'POST'])
 def scan():
