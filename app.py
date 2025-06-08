@@ -33,7 +33,7 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf8')
 
 class Config:
     """Optimized application configuration"""
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///liberica_bean_metadata_optimized.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///liberica_bean_metadata.db'
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_size': 10,
         'max_overflow': 20,
